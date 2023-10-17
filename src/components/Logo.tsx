@@ -11,7 +11,7 @@ export default function Logo() {
         priority
       />
 
-      <h2 className="text-2xl font-semibold">Paleta</h2>
+      <h2 className="text-2xl leading-9 font-semibold">Paleta</h2>
     </div>
   );
 }
