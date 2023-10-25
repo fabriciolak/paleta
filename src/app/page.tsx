@@ -1,20 +1,14 @@
 "use client";
+
 import React from "react";
 import Highlight from "react-highlight";
 
-import { ColorGrid } from "@/components/Color";
+import { ColorPalette } from "@/components/Color";
 import { Header } from "@/components/Header";
+import { useColor } from "@/hooks/useColor";
 
 export default function Home() {
-  React.useEffect(() => {
-    window.addEventListener("keydown", function (e) {
-      console.log(e);
-
-      if (e.code === "Space" && e.target == document.body) {
-        e.preventDefault();
-      }
-    });
-  }, []);
+  const { color } = useColor();
 
   return (
     <main>
@@ -36,7 +30,10 @@ export default function Home() {
           <div className="flex gap-2 mt-8">
             <div className="flex flex-1 gap-4 px-6 items-center border border-cod-gray-600/20 rounded-lg">
               <div>
-                <div className="w-8 h-8 rounded-full bg-[#28675B]" />
+                <div
+                  className="w-8 h-8 rounded-full"
+                  style={{ backgroundColor: color }}
+                />
               </div>
 
               <input
@@ -53,7 +50,7 @@ export default function Home() {
         </div>
       </div>
 
-      <ColorGrid />
+      <ColorPalette />
 
       <div className="w-full mt-16">
         <div className="max-w-7xl m-auto grid grid-cols-2 gap-6">

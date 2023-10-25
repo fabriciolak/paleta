@@ -1,58 +1,29 @@
-import React from "react";
+"use client";
 
-export function ColorGrid() {
-  const colors = React.useMemo(() => {
-    return {
-      color: "#28675b",
-      name: "Majorelle Garden",
-      palette: [
-        {
-          name: 50,
-          color: "#f3faf7",
-        },
-        {
-          name: 100,
-          color: "#d6f1e8",
-        },
-        {
-          name: 200,
-          color: "#ADE2D2",
-        },
-        {
-          name: 300,
-          color: "#7cccb6",
-        },
-        {
-          name: 400,
-          color: "#51b099",
-        },
-        {
-          name: 500,
-          color: "#37957f",
-        },
-        {
-          name: 600,
-          color: "#2a7767",
-        },
-        {
-          name: 700,
-          color: "#28675b",
-        },
-        {
-          name: 800,
-          color: "#224d46",
-        },
-        {
-          name: 900,
-          color: "#20413b",
-        },
-        {
-          name: 950,
-          color: "#0d2622",
-        },
-      ],
-    };
-  }, []);
+import React from "react";
+import { Palette } from "./Palette";
+import { useColor } from "@/hooks/useColor";
+
+export function ColorPalette() {
+  // const colors = {
+  //   color: "#28675b",
+  //   name: "Majorelle Garden",
+  //   palette: [
+  //     { name: 0, color: "hsl(157, 34%, 75%)" },
+  //     { name: 0, color: "hsl(157, 33.9%, 65%)" },
+  //     { name: 0, color: "hsl(157, 33.8%, 55%)" },
+  //     { name: 0, color: "hsl(157, 33.7%, 45%)" },
+  //     { name: 0, color: "hsl(157, 33.6%, 35%)" },
+  //     { name: 0, color: "hsl(157, 33.5%, 25%)" },
+  //     { name: 0, color: "hsl(157, 33.4%, 15%)" },
+  //     { name: 0, color: "hsl(157, 33.3%, 5%)" },
+  //     { name: 0, color: "hsl(157, 33.2%, -5%)" },
+  //     { name: 0, color: "hsl(157, 33.1%, -15%)" },
+  //     { name: 0, color: "hsl(157, 33%, -25%)" },
+  //   ],
+  // };
+  const { palette } = useColor();
+  const colorName = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 
   return (
     <div className="w-full mt-16">
@@ -65,30 +36,14 @@ export function ColorGrid() {
           <span className="text-base ">Majorelle Garden</span>
         </div>
 
-        {/* Color Grid */}
+        {/* Colors */}
         <div className="flex gap-2 py-4">
-          {/* Color */}
-          {colors.palette.map((color, index) => {
+          {palette.map((color, index) => {
             return (
-              <>
-                <div
-                  key={index}
-                  className="w-[109px] h-[220px] flex flex-col gap-4"
-                >
-                  <div
-                    className="w-full h-[144px] rounded-lg p-2"
-                    style={{ backgroundColor: color.color }}
-                  ></div>
-                  <div className="flex flex-col gap-1">
-                    <div className="text-xl leading-8 font-semibold text-cod-gray-950">
-                      {color.name}
-                    </div>
-                    <span className="text-base text-cod-gray-500">
-                      {color.color.toUpperCase()}
-                    </span>
-                  </div>
-                </div>
-              </>
+              <Palette
+                key={index}
+                colorInfo={{ color, name: colorName[index] }}
+              />
             );
           })}
         </div>
