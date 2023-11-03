@@ -6,9 +6,17 @@ import Highlight from "react-highlight";
 import { ColorPalette } from "@/components/Color";
 import { Header } from "@/components/Header";
 import { useColor } from "@/hooks/useColor";
+import { useDispatch } from "react-redux";
+import { generate } from "@/store/slices/color";
 
 export default function Home() {
+  const [inputColor, setInputColor] = React.useState("");
+  const dispatch = useDispatch();
   const { color } = useColor();
+
+  React.useEffect(() => {
+    console.log(inputColor);
+  }, [dispatch, inputColor]);
 
   return (
     <main>
@@ -29,17 +37,25 @@ export default function Home() {
 
           <div className="flex gap-2 mt-8">
             <div className="flex flex-1 gap-4 px-6 items-center border border-cod-gray-600/20 rounded-lg">
-              <div>
-                <div
-                  className="w-8 h-8 rounded-full"
-                  style={{ backgroundColor: color }}
+              <div className="flex items-center justify-center">
+                <input
+                  type="color"
+                  id="color-picker"
+                  value={color}
+                  className="
+                    w-8 h-8
+                    [&::-webkit-color-swatch]:border-none
+                    [&::-webkit-color-swatch]:rounded-full
+                    [&::-webkit-color-swatch-wrapper]:p-0
+                  "
+                  // onChange={(e) => setInputColor(e.target.value)}
                 />
               </div>
 
               <input
                 type="text"
                 className="w-full outline-none"
-                placeholder="#28675B"
+                placeholder={`${color}`}
               />
             </div>
 

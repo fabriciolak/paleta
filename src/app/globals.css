@@ -6,3 +6,7 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  background-color: white;
+}

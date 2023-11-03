@@ -1,10 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import chroma from "chroma-js";
 
 const colorSlice = createSlice({
   name: 'color',
   initialState: {
-    color: '',
+    color: {},
     palette: [] as Array<string>
   },
   reducers: {
@@ -16,9 +16,7 @@ const colorSlice = createSlice({
       const palette = chroma.scale([brightColour, color, darkColor]).colors(11)
       
       state.palette = palette
-
-      // console.log(state.color)
-      console.log(state.palette)
+      state.color = color
     }
   }
 })
