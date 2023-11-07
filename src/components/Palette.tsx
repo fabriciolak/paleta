@@ -4,28 +4,43 @@ import { ColorPicker } from "./ColorPicker";
 import { ColorScale } from "./ColorScale";
 import { useColor } from "@/hooks/useColor";
 import { generateColorScale } from "@/store/slices/color";
+import chroma from "chroma-js";
 
 export function Palette() {
+  const [colorInput, setColorInput] = React.useState("");
   const actionDispatched = React.useRef(false);
   const dispatch = useDispatch();
   const { palette, color } = useColor();
 
   React.useEffect(() => {
     if (!actionDispatched.current) {
-      dispatch(generateColorScale({ color: "#860909" }));
+      dispatch(generateColorScale({ color }));
       actionDispatched.current = true;
     }
-  }, [actionDispatched, dispatch]);
+  }, [actionDispatched, dispatch, color]);
 
   React.useEffect(() => {
     window.addEventListener("keydown", function (e) {
       if (e.code === "Space" && e.target == document.body) {
         e.preventDefault();
 
-        dispatch(generateColorScale({ color: "" }));
+        dispatch(generateColorScale({ color }));
       }
     });
-  }, [dispatch]);
+  }, [dispatch, color]);
+
+  const colorInputValue = React.useMemo(() => {
+    const isValidHex = chroma.valid(colorInput);
+
+    console.log(isValidHex, isValidHex);
+
+    if (colorInput.length >= 6 && isValidHex) {
+      dispatch(generateColorScale({ color: colorInput }));
+      return;
+    }
+  }, [colorInput, dispatch]);
+
+  console.log(colorInputValue, colorInputValue);
 
   return (
     <div>
@@ -52,10 +67,17 @@ export function Palette() {
                 type="text"
                 className="w-full outline-none"
                 placeholder={`${color}`}
+                value={colorInput}
+                onChange={(e) => setColorInput(e.target.value)}
               />
             </div>
 
-            <button className="h-12 px-6 py-2 flex items-center bg-cod-gray-950 text-cod-gray-50 rounded-lg">
+            <button
+              onClick={() => {
+                dispatch(generateColorScale({ color: chroma.random().hex() }));
+              }}
+              className="h-12 px-6 py-2 flex items-center bg-cod-gray-950 text-cod-gray-50 rounded-lg"
+            >
               Generate Palette
             </button>
           </div>
