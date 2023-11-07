@@ -1,44 +1,41 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "@/store";
+import { generate } from "@/store/slices/color";
+import { useColor } from "@/hooks/useColor";
 import { ColorPicker } from "./ColorPicker";
 import { ColorScale } from "./ColorScale";
-import { useColor } from "@/hooks/useColor";
-import { generateColorScale } from "@/store/slices/color";
 import chroma from "chroma-js";
 
 export function Palette() {
-  const [colorInput, setColorInput] = React.useState("");
-  const actionDispatched = React.useRef(false);
-  const dispatch = useDispatch();
-  const { palette, color } = useColor();
+  const [inputValue, setInputValue] = React.useState<string>("");
+  const dispatch = useAppDispatch();
+
+  const { color, palette } = useColor();
+
+  function handleGenerate() {
+    const isValidHex = chroma.valid(inputValue);
+
+    if (inputValue.length <= 6 && isValidHex) {
+      dispatch(generate({ color: inputValue }));
+      setInputValue("");
+
+      return;
+    }
+  }
 
   React.useEffect(() => {
-    if (!actionDispatched.current) {
-      dispatch(generateColorScale({ color }));
-      actionDispatched.current = true;
-    }
-  }, [actionDispatched, dispatch, color]);
+    dispatch(generate({ color: "" }));
+  }, [dispatch]);
 
   React.useEffect(() => {
     window.addEventListener("keydown", function (e) {
       if (e.code === "Space" && e.target == document.body) {
         e.preventDefault();
 
-        dispatch(generateColorScale({ color }));
+        dispatch(generate({ color: "" }));
       }
     });
-  }, [dispatch, color]);
-
-  function handleGenerateNewColorScale() {
-    const isValidHex = chroma.valid(colorInput);
-
-    if (colorInput.length >= 6 && isValidHex) {
-      dispatch(generateColorScale({ color: colorInput }));
-      setColorInput("");
-
-      return;
-    }
-  }
+  }, [dispatch]);
 
   return (
     <div>
@@ -64,14 +61,14 @@ export function Palette() {
               <input
                 type="text"
                 className="w-full outline-none"
-                placeholder={`${color}`}
-                value={colorInput}
-                onChange={(e) => setColorInput(e.target.value)}
+                placeholder={color}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
               />
             </div>
 
             <button
-              onClick={handleGenerateNewColorScale}
+              onClick={handleGenerate}
               className="h-12 px-6 py-2 flex items-center bg-cod-gray-950 text-cod-gray-50 rounded-lg"
             >
               Generate Palette

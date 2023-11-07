@@ -1,11 +1,10 @@
 "use client";
 
 import React from "react";
-import Highlight from "react-highlight";
 
 import { Header } from "@/components/Header";
-import { useColor } from "@/hooks/useColor";
 import { Palette } from "@/components/Palette";
+import { ColorCopy } from "@/components/ColorCopy";
 
 export default function Home() {
   return (
@@ -26,31 +25,23 @@ export default function Home() {
               <span className="font-medium">`theme.colors`</span> section of
               your configuration file:
             </p>
+
+            <p>
+              See more in{" "}
+              <a
+                rel="noopener noreferrer"
+                target="_blank"
+                href="https://tailwindcss.com/docs/customizing-colors#using-custom-colors"
+                className="font-semibold hover:text-blue-500"
+              >
+                Using custom colors.
+              </a>
+            </p>
           </section>
 
-          <section className="bg-cod-gray-950 rounded-lg p-4">
+          <section className="rounded-lg p-4">
             <div className="h-full text-cod-gray-100">
-              <Highlight className="json">
-                {`module.exports = {
-              theme: {
-                  colors: {
-                    'cod-gray': {
-                      '50': '#f6f6f6',
-                      '100': '#e7e7e7',
-                      '200': '#d1d1d1',
-                      '300': '#b0b0b0',
-                      '400': '#888888',
-                      '500': '#6d6d6d',
-                      '600': '#5d5d5d',
-                      '700': '#4f4f4f',
-                      '800': '#454545',
-                      '900': '#3d3d3d',
-                      '950': '#121212',
-                    }
-                  }
-                }
-              }`}
-              </Highlight>
+              <ColorCopy />
             </div>
           </section>
         </div>

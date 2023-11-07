@@ -1,28 +1,34 @@
-import { colorScale } from "@/lib/color-scale";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import chroma from "chroma-js";
 
+interface ColorSliceType {
+  color: string
+  palette: Array<string>
+}
+
+const initialState = {
+  color: '',
+  palette: []
+} as ColorSliceType
+
 const colorSlice = createSlice({
   name: 'color',
-  initialState: {
-    color: '',
-    palette: [] as Array<string>
-  },
+  initialState,
   reducers: {
-    generateColorScale: (state, action: PayloadAction<{ color: string }>) => {
-      let color = action.payload.color ? chroma(action.payload.color) : chroma.random()
+    generate: (state, action: PayloadAction<{ color: string }>) => {
+      const color = action.payload.color ? chroma(action.payload.color) : chroma.random()
 
-      console.log(action.payload.color)
+      const dark = chroma(color).darken(16)
+      const bright = chroma(color).brighten((2 - chroma(color).luminance()) * 4)
 
-      const darkColor = chroma(color).darken(8)
-      const brightColour = color.brighten((2 - color.luminance()) * 4)
-      const palette = chroma.scale([brightColour, color, darkColor]).colors(11)
+      const palette = chroma.scale([bright, color, dark]).colors(11)
 
+      state.color = chroma(color).hex()
       state.palette = palette
-      state.color = color.hex()
     },
   },
 })
 
-export const { generateColorScale } = colorSlice.actions
 export const color = colorSlice.reducer
+
+export const { generate } = colorSlice.actions

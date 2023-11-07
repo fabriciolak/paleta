@@ -1,12 +1,9 @@
-import { useSelector } from "@/store";
+import { useAppSelector } from "@/store";
 
 export function useColor() {
-  return useSelector((store) => {
-    const { palette, color } = store.color;
+  return useAppSelector((store) => {
+    const { color, palette } = store.color;
 
-    return {
-      palette,
-      color: String(color),
-    };
+    return { color, palette };
   });
 }
