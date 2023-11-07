@@ -29,18 +29,16 @@ export function Palette() {
     });
   }, [dispatch, color]);
 
-  const colorInputValue = React.useMemo(() => {
+  function handleGenerateNewColorScale() {
     const isValidHex = chroma.valid(colorInput);
-
-    console.log(isValidHex, isValidHex);
 
     if (colorInput.length >= 6 && isValidHex) {
       dispatch(generateColorScale({ color: colorInput }));
+      setColorInput("");
+
       return;
     }
-  }, [colorInput, dispatch]);
-
-  console.log(colorInputValue, colorInputValue);
+  }
 
   return (
     <div>
@@ -73,9 +71,7 @@ export function Palette() {
             </div>
 
             <button
-              onClick={() => {
-                dispatch(generateColorScale({ color: chroma.random().hex() }));
-              }}
+              onClick={handleGenerateNewColorScale}
               className="h-12 px-6 py-2 flex items-center bg-cod-gray-950 text-cod-gray-50 rounded-lg"
             >
               Generate Palette
