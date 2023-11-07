@@ -5,7 +5,10 @@ import { useSelector as primitiveUseSelector, TypedUseSelectorHook } from 'react
 export const store = configureStore({
   reducer: {
     'color': color
-  }
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    serializableCheck: false
+  })
 })
 
 export type RootState = ReturnType<typeof store.getState>
