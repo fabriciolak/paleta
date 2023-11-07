@@ -3,25 +3,29 @@
 import React from "react";
 import { Palette } from "./Palette";
 import { useDispatch } from "react-redux";
-import { generate } from "@/store/slices/color";
+import { generateColorScale } from "@/store/slices/color";
 import { useColor } from "@/hooks/useColor";
 
-export function ColorPalette() {
+function ColorPaletteMemo() {
+  const actionDispatched = React.useRef(false);
   const dispatch = useDispatch();
   const { palette } = useColor();
+
+  React.useEffect(() => {
+    if (!actionDispatched.current) {
+      dispatch(generateColorScale({ color: "#860909" }));
+      actionDispatched.current = true;
+    }
+  }, [actionDispatched, dispatch]);
 
   React.useEffect(() => {
     window.addEventListener("keydown", function (e) {
       if (e.code === "Space" && e.target == document.body) {
         e.preventDefault();
 
-        dispatch(generate());
+        dispatch(generateColorScale({ color: "" }));
       }
     });
-  }, [dispatch]);
-
-  React.useEffect(() => {
-    dispatch(generate());
   }, [dispatch]);
 
   return (
@@ -47,3 +51,5 @@ export function ColorPalette() {
     </div>
   );
 }
+
+export const ColorPalette = React.memo(ColorPaletteMemo);

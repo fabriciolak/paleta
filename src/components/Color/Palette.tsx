@@ -1,6 +1,3 @@
-import { useColor } from "@/hooks/useColor";
-import React from "react";
-
 interface PaletteProps {
   color: string;
   colorIndex: number;
