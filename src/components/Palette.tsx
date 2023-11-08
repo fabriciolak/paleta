@@ -5,21 +5,30 @@ import { useColor } from "@/hooks/useColor";
 import { ColorPicker } from "./ColorPicker";
 import { ColorScale } from "./ColorScale";
 import chroma from "chroma-js";
+import { useWindowDimension } from "@/hooks/useWindowDimension";
 
 export function Palette() {
-  const [inputValue, setInputValue] = React.useState<string>("");
+  const { color, palette } = useColor();
+  const { width } = useWindowDimension();
+  const [inputValue, setInputValue] = React.useState<string>(color);
   const dispatch = useAppDispatch();
 
-  const { color, palette } = useColor();
+  const IS_MOBILE = width <= 640 ? true : false;
 
   function handleGenerate() {
     const isValidHex = chroma.valid(inputValue);
+    const inputValueHex = inputValue.replace("#", "");
 
-    if (inputValue.length <= 6 && isValidHex) {
+    if (inputValueHex.length <= 6 && isValidHex) {
       dispatch(generate({ color: inputValue }));
       setInputValue("");
 
       return;
+    }
+
+    if (inputValueHex.length <= 6 && IS_MOBILE) {
+      dispatch(generate({ color: inputValue }));
+      setInputValue("");
     }
   }
 
@@ -52,15 +61,15 @@ export function Palette() {
             </p>
           </div>
 
-          <div className="flex gap-2 mt-8">
-            <div className="flex flex-1 gap-4 px-6 items-center border border-cod-gray-600/20 rounded-lg">
+          <div className="flex gap-2 mt-8 sm:static fixed bottom-16 inset-x-4 sm:inset-0 z-10 sm:z-0 sm:h-auto bg-cod-gray-50 sm:bg-transparent p-4 sm:p-0 border sm:border-none border-cod-gray-600/20 rounded-full sm:rounded-none shadow-sm sm:shadow-none">
+            <div className="flex flex-1 gap-4 bg-cod-gray-50 sm:bg-transparent px-6 items-center border border-cod-gray-600/20 rounded-full sm:rounded-lg">
               <div className="flex items-center justify-center">
                 <ColorPicker />
               </div>
 
               <input
                 type="text"
-                className="w-full outline-none"
+                className="w-full outline-none "
                 placeholder={color}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
@@ -69,9 +78,9 @@ export function Palette() {
 
             <button
               onClick={handleGenerate}
-              className="h-12 px-6 py-2 flex items-center bg-cod-gray-950 text-cod-gray-50 rounded-lg"
+              className="h-12 px-6 py-2 flex items-center bg-cod-gray-950 text-cod-gray-50 rounded-full md:rounded-lg"
             >
-              Generate Palette
+              {IS_MOBILE ? "Random" : "Generate"}
             </button>
           </div>
         </div>
