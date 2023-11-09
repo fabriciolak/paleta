@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { finishLoading, generate, startLoading } from "@/store/slices/color";
+import { generate } from "@/store/slices/color";
 import { useColor } from "@/hooks/useColor";
 import { ColorPicker } from "./ColorPicker";
 import { ColorScale } from "./ColorScale";
@@ -24,11 +24,6 @@ export function Palette() {
       dispatch(generate({ color: inputValue }));
       setInputValue("");
     }
-
-    // if (inputValueHex.length <= 6 && IS_MOBILE) {
-    //   dispatch(generate({ color: inputValue }));
-    //   setInputValue("");
-    // }
   }
 
   React.useEffect(() => {
@@ -46,6 +41,8 @@ export function Palette() {
 
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [dispatch]);
+
+  const colorGeneratedIndex = palette.findIndex((value) => value === color);
 
   return (
     <div>
@@ -97,15 +94,25 @@ export function Palette() {
           </div>
 
           <div className="flex flex-col lg:flex-row gap-2 py-4">
-            {palette.map((color, colorIndex) => {
-              return (
-                <ColorScale
-                  color={color}
-                  colorIndex={colorIndex}
-                  key={colorIndex}
-                />
-              );
-            })}
+            {palette.length > 0
+              ? palette.map((color, colorIndex) => {
+                  return (
+                    <ColorScale
+                      color={color}
+                      colorIndex={colorIndex}
+                      colorGeneratedIndex={colorGeneratedIndex}
+                      key={colorIndex}
+                    />
+                  );
+                })
+              : Array.from({ length: 11 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="w-full lg:w-[6.8125rem] lg:h-[220px] h-16 flex flex-col gap-4 rounded-lg bg-cod-gray-500/10"
+                  >
+                    <div className="w-full h-[144px] rounded-lg p-2 flex justify-end md:justify-center pr-6 md:pr-0 items-center"></div>
+                  </div>
+                ))}
           </div>
         </div>
       </section>
