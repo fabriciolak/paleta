@@ -1,5 +1,5 @@
 import React from "react";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch } from "@/store";
 import { generate } from "@/store/slices/color";
 import { useColor } from "@/hooks/useColor";
 import { ColorPicker } from "./ColorPicker";
