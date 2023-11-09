@@ -13,22 +13,39 @@ const initialState = {
 
 const colorSlice = createSlice({
   name: 'color',
-  initialState,
+  initialState: {
+    ...initialState,
+    loading: false
+  },
   reducers: {
+    startLoading: (state) => {
+      state.loading = true
+    },
+    finishLoading: (state) => {
+      state.loading = false
+    },
     generate: (state, action: PayloadAction<{ color: string }>) => {
-      const color = action.payload.color ? chroma(action.payload.color) : chroma.random()
+      let color = action.payload.color ? chroma(action.payload.color) : chroma.random()
+      const mainColorIndex = Math.floor(Math.random() * 11)
 
-      const dark = chroma(color).darken(16)
-      const bright = chroma(color).brighten((2 - chroma(color).luminance()) * 4)
+      color = color.luminance(1 - mainColorIndex / 10)
 
-      const palette = chroma.scale([bright, color, dark]).colors(11)
+      const dark = chroma(color).darken(1.6)
+      const bright = chroma(color).brighten((2 - chroma(color).luminance()) * 6)
+
+      const brightPalette = chroma.scale([bright, color]).colors(mainColorIndex + 1)
+      brightPalette.pop()
+
+      const darkPalette = chroma.scale([color, dark]).colors(11 - mainColorIndex)
+
+      const palette = [...brightPalette, ...darkPalette]
 
       state.color = chroma(color).hex()
-      state.palette = palette
+      state.palette = palette    
     },
   },
 })
 
 export const color = colorSlice.reducer
 
-export const { generate } = colorSlice.actions
+export const { generate, startLoading, finishLoading } = colorSlice.actions
