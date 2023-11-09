@@ -13,17 +13,8 @@ const initialState = {
 
 const colorSlice = createSlice({
   name: 'color',
-  initialState: {
-    ...initialState,
-    loading: false
-  },
+  initialState,
   reducers: {
-    startLoading: (state) => {
-      state.loading = true
-    },
-    finishLoading: (state) => {
-      state.loading = false
-    },
     generate: (state, action: PayloadAction<{ color: string }>) => {
       let color = action.payload.color ? chroma(action.payload.color) : chroma.random()
       const mainColorIndex = Math.floor(Math.random() * 11)
@@ -48,4 +39,4 @@ const colorSlice = createSlice({
 
 export const color = colorSlice.reducer
 
-export const { generate, startLoading, finishLoading } = colorSlice.actions
+export const { generate } = colorSlice.actions
