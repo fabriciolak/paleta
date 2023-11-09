@@ -19,8 +19,6 @@ const colorSlice = createSlice({
       let color = action.payload.color ? chroma(action.payload.color) : chroma.random()
       const mainColorIndex = Math.floor(Math.random() * 11)
 
-      color = color.luminance(1 - mainColorIndex / 10)
-
       const dark = chroma(color).darken(1.6)
       const bright = chroma(color).brighten((2 - chroma(color).luminance()) * 6)
 
