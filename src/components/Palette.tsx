@@ -1,6 +1,6 @@
 import React from "react";
-import { useAppDispatch } from "@/store";
-import { generate } from "@/store/slices/color";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { finishLoading, generate, startLoading } from "@/store/slices/color";
 import { useColor } from "@/hooks/useColor";
 import { ColorPicker } from "./ColorPicker";
 import { ColorScale } from "./ColorScale";
@@ -9,41 +9,42 @@ import { useWindowDimension } from "@/hooks/useWindowDimension";
 
 export function Palette() {
   const { color, palette } = useColor();
-  const { width } = useWindowDimension();
+  const loading = true;
   const [inputValue, setInputValue] = React.useState<string>(color);
+  const { width } = useWindowDimension();
   const dispatch = useAppDispatch();
 
-  const IS_MOBILE = width <= 640 ? true : false;
+  const IS_MOBILE = width <= 640;
 
   function handleGenerate() {
-    const isValidHex = chroma.valid(inputValue);
     const inputValueHex = inputValue.replace("#", "");
+    const isValidHex = chroma.valid(inputValue) && inputValueHex.length <= 6;
 
-    if (inputValueHex.length <= 6 && isValidHex) {
-      dispatch(generate({ color: inputValue }));
-      setInputValue("");
-
-      return;
-    }
-
-    if (inputValueHex.length <= 6 && IS_MOBILE) {
+    if (isValidHex) {
       dispatch(generate({ color: inputValue }));
       setInputValue("");
     }
+
+    // if (inputValueHex.length <= 6 && IS_MOBILE) {
+    //   dispatch(generate({ color: inputValue }));
+    //   setInputValue("");
+    // }
   }
 
   React.useEffect(() => {
     dispatch(generate({ color: "" }));
-  }, [dispatch]);
 
-  React.useEffect(() => {
-    window.addEventListener("keydown", function (e) {
-      if (e.code === "Space" && e.target == document.body) {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "Space") {
         e.preventDefault();
 
         dispatch(generate({ color: "" }));
       }
-    });
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [dispatch]);
 
   return (
@@ -92,7 +93,7 @@ export function Palette() {
             <h3 className="text-xl font-semibold leading-8 text-cod-gray-950">
               Generated palette
             </h3>
-            <span className="text-base ">Majorelle Garden</span>
+            <span className="text-base ">Copy your custom palette bellow</span>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-2 py-4">
