@@ -24,6 +24,11 @@ export function Palette() {
       dispatch(generate({ color: inputValue }));
       setInputValue("");
     }
+
+    if (IS_MOBILE && inputValue.length <= 6) {
+      dispatch(generate({ color: inputValue }));
+      setInputValue("");
+    }
   }
 
   React.useEffect(() => {
