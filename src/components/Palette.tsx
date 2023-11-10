@@ -9,7 +9,6 @@ import { useWindowDimension } from "@/hooks/useWindowDimension";
 
 export function Palette() {
   const { color, palette } = useColor();
-  const loading = true;
   const [inputValue, setInputValue] = React.useState<string>(color);
   const { width } = useWindowDimension();
   const dispatch = useAppDispatch();
@@ -32,8 +31,6 @@ export function Palette() {
   }
 
   React.useEffect(() => {
-    dispatch(generate({ color: "" }));
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === "Space") {
         e.preventDefault();
@@ -44,7 +41,10 @@ export function Palette() {
 
     window.addEventListener("keydown", handleKeyDown);
 
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      dispatch(generate({ color: "" }));
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [dispatch]);
 
   const colorGeneratedIndex = palette.findIndex((value) => value === color);

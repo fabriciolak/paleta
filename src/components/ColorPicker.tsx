@@ -2,18 +2,10 @@
 
 import React from "react";
 import { useColor } from "@/hooks/useColor";
-import { useAppDispatch } from "@/store";
-import { generate } from "@/store/slices/color";
 
 export function ColorPicker() {
   const { color } = useColor();
   const [inputValue, setInputValue] = React.useState<string>(color);
-
-  const dispatch = useAppDispatch();
-
-  React.useEffect(() => {
-    dispatch(generate({ color: inputValue }));
-  }, [dispatch, inputValue]);
 
   return (
     <input
